@@ -390,7 +390,14 @@ def pick_coeffs(X, idxs_obs=None, idxs_nas=None, self_mask=False):
     else:
         d_obs = len(idxs_obs)
         d_na = len(idxs_nas)
-        coeffs = torch.randn(d_obs, d_na)
+        coeffs = torch.randn(d_obs, d_na).float()
+
+        # Dynamically adjust coeffs to match the type of X[:, idxs_obs]
+        if X[:, idxs_obs].dtype == torch.double:
+            coeffs = coeffs.double()
+        # Add more conditions here if there are other types you need to handle
+
+        # Perform operations
         Wx = X[:, idxs_obs].mm(coeffs)
         coeffs /= torch.std(Wx, 0, keepdim=True)
     return coeffs
@@ -480,6 +487,8 @@ def random_missing(array, fractions_to_change):
     return result
 
 def generate_middle(lower,upper,partial_missing,dataset,missing_dim):
+    
+    
     if lower == 0:
         lower_quantile = np.min(dataset[:, :missing_dim], axis=0) - 1e-7
     else:
@@ -490,7 +499,7 @@ def generate_middle(lower,upper,partial_missing,dataset,missing_dim):
         upper_quantile = np.quantile(dataset[:, :missing_dim],upper, axis=0)
 
     ix_larger_than = dataset[:, :missing_dim] > lower_quantile
-    ix_smaller_than = dataset[:, :missing_dim] < (upper_quantile )
+    ix_smaller_than = dataset[:, :missing_dim] <= (upper_quantile )
 
     
     combined_ix = np.equal(ix_larger_than, ix_smaller_than)
@@ -500,7 +509,6 @@ def generate_middle(lower,upper,partial_missing,dataset,missing_dim):
     return combined_ix
 
 def missing_by_range(X,multiple_block,missing_dim=1):
-    print("start precentile")
     """    
     Missing_quantile: value is larger than quantile will be missing
     Missing_dim: how many columns have missing data
@@ -558,5 +566,5 @@ def diffuse_mnar_single(data, up_percentile = 0.5, obs_percentile = 0.5):
 
         merged_temp = np.logical_or(temp, temp2).astype(int)
         mask[:, miss_col] = merged_temp
-    print("Missing Rate",1 - np.count_nonzero(mask) / mask.size)
+
     return mask
