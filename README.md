@@ -48,7 +48,7 @@
 
 
       "qsar_biodegradation":https://archive.ics.uci.edu/dataset/254/qsar+biodegradation 
-      1055 instances
+      1055 instances Classification
       41 molecular descriptors and 1 experimental class:
       
       "yeast":https://archive.ics.uci.edu/dataset/110/yeast
@@ -60,15 +60,30 @@
 
 2. Run```create_missing.ipynb```
    Create Missing Masks, include missing rate
+   - Add five fold visualization 
 
 3. Run ```create_visualization.ipynb```
    Create Missing Mech ScatterPlot, Missing Rate Plot, Missing Distribution Plot
 
 4. Run models
    Under Model folders, each model will create a train and test data
-   ```mean.ipynb``` Mean Value imputation from Sklearn
+   ```mean.ipynb``` fast ,
+   ```knn.ipynb```fast , 
+   ```missforest.ipynb```slow operating time imputation from Sklearn
+   ```XBG.ipynb``` Missing Imputer from https://github.com/sjtupig/MissingImputer
+   ```MICE.ipynb```
+   
 
 5. Run Evaluation
-   RMSE
-   Downstream
+   RMSE ```rmse.ipynb```
+   Downstream ```mltask.ipynb``` if need to normalization?
+   results display  ```results_printour.ipynb``` and visualization
+
+Todo:
+pipline finished ✔
+8 more dataset
+MIWAE, notMIWAE, OT, GAIN, MCFLOW, TabCSDI, Hyper imputer existing model 
+new: MIDAE VAEI GINN VGAIN<- check data type 
    
+
+

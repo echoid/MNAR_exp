@@ -553,6 +553,7 @@ def diffuse_mnar_single(data, up_percentile = 0.5, obs_percentile = 0.5):
 
     n_cols = data.shape[1]
     n_miss_cols = int(n_cols * 0.5)  # 选择50%的列作为缺失列
+    np.random.seed(1)
     miss_cols = np.random.choice(n_cols, size=n_miss_cols, replace=False)  # 随机选择缺失列的索引
 
     obs_cols = [col for col in range(data.shape[1]) if col not in miss_cols]

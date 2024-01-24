@@ -104,8 +104,8 @@ class MissingImputer():
 			for i in num_nan_desc:
 				i_nan_index = X_nan[:, i]
 				#查看该特征是否有缺失值
-				if np.sum(i_nan_index) == 0:
-					break
+				# if np.sum(i_nan_index) == 0:
+				# 	break
 
 				X_1 = np.delete(imputed_X, i, 1)
 				X_train = X_1[~i_nan_index]
@@ -120,8 +120,8 @@ class MissingImputer():
 
 			gamma = ((imputed_X-imputed_ini)**2/(1e-6+imputed_X.var(axis=0))).sum()/(1e-6+X_nan.sum())
 			self.gamma_.append(gamma)
-			if np.abs(np.diff(self.gamma_[-2:])) < self.tol:
-				break
+			# if np.abs(np.diff(self.gamma_[-2:])) < self.tol:
+			# 	break
 		#for test
 		print(imputed_X)
 
