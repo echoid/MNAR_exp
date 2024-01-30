@@ -1,0 +1,24 @@
+python gain_main.py --data_name climate_model_crashes --miss_type logistic
+python gain_main.py --data_name california --miss_type logistic
+python gain_main.py --data_name wine_quality_red --miss_type logistic
+python gain_main.py --data_name concrete_compression --miss_type logistic
+python gain_main.py --data_name banknote --miss_type logistic
+python gain_main.py --data_name yacht_hydrodynamics --miss_type diffuse
+python gain_main.py --data_name yeast --miss_type diffuse
+python gain_main.py --data_name qsar_biodegradation --miss_type diffuse
+python gain_main.py --data_name connectionist_bench_sonar --miss_type diffuse
+python gain_main.py --data_name climate_model_crashes --miss_type diffuse
+python gain_main.py --data_name california --miss_type diffuse
+python gain_main.py --data_name wine_quality_red --miss_type diffuse
+python gain_main.py --data_name concrete_compression --miss_type diffuse
+python gain_main.py --data_name banknote --miss_type diffuse
+python gain_main.py --data_name yacht_hydrodynamics --miss_type quantile
+python gain_main.py --data_name yeast --miss_type quantile
+python gain_main.py --data_name qsar_biodegradation --miss_type quantile
+python gain_main.py --data_name connectionist_bench_sonar --miss_type quantile
+python gain_main.py --data_name climate_model_crashes --miss_type quantile
+python gain_main.py --data_name california --miss_type quantile
+python gain_main.py --data_name wine_quality_red --miss_type quantile
+python gain_main.py --data_name concrete_compression --miss_type quantile
+python gain_main.py --data_name banknote --miss_type quantile
+

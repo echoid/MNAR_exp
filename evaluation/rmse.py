@@ -140,7 +140,7 @@ def make_plot(norm_value,impute,mask, title = None,subtitle = None):
     plt.show()
 
 
-    
+
 def RMSE(mask,complete,imputed):
     missing_data_points = mask == 0
 
@@ -190,106 +190,120 @@ def load_train_test(index_file,norm_values,observed_masks):
     return train_values,train_masks,test_values,test_masks
 
 
+
+
+        
+def calculate_rmse(missingtype,dataname,model_name,missing_rule):
+    # load data and its mask
+    directory_path = f"../datasets/{dataname}"    
+    norm_values = np.load(f'{directory_path}/{dataname}_norm.npy')
+    f = open(f'{directory_path}/split_index_cv_seed-{seed}_nfold-{nfold}.json')
+    index_file = json.load(f)
+    print(dataname)
+
+    train_rmse_mean = []
+    train_rmse_std = []
+    train_mae_mean = []
+    train_mae_std = []
+
+    
+    test_rmse_mean = []
+    test_rmse_std = []
+    test_mae_mean = []
+    test_mae_std = []
+
+
+    for rule_name in tqdm(missing_rule):
+        observed_masks = np.load(f'{directory_path}/{missingtype}/{rule_name}.npy')
+        train_rmse_list = []
+        train_mae_list = []
+        test_rmse_list = []
+        test_mae_list = []
+        for fold in index_file:
+            index = index_file[fold]
+            train_values,train_masks,test_values,test_masks = load_train_test(index,norm_values,observed_masks)
+            impute_train,impute_test  = load_impute_data(missingtype,model_name,rule_name,dataname,fold)
+
+            train_rmse = RMSE(train_masks,train_values,impute_train)
+            train_mae = MAE(train_masks,train_values,impute_train)
+
+            test_rmse = RMSE(test_masks,test_values,impute_test)
+            test_mae = MAE(test_masks,test_values,impute_test)
+
+            train_rmse_list.append(train_rmse)
+            train_mae_list.append(train_mae)
+            test_rmse_list.append(test_rmse)
+            test_mae_list.append(test_mae)
+        
+        if train_rmse > 0.5 and plot:
+            print(rule_name)
+            rmse = RMSE_columnwise(train_masks,train_values,impute_train)
+            print(rmse)
+            make_plot(train_values,impute_train,train_masks,title = f"{model_name} {dataname} {missingtype} {rule_name}",subtitle=rmse)
+        
+        
+            
+
+        train_rmse_mean.append(np.mean(train_rmse_list))
+        train_rmse_std.append(np.std(train_rmse_list))
+
+        train_mae_mean.append(np.mean(train_mae_list))
+        train_mae_std.append(np.std(train_mae_list))
+
+        test_rmse_mean.append(np.mean(test_rmse_list))
+        test_rmse_std.append(np.std(test_rmse_list))
+
+        test_mae_mean.append(np.mean(test_mae_list))
+        test_mae_std.append(np.std(test_mae_list))
+
+
+    df = pd.DataFrame({
+    "train_rmse_mean": train_rmse_mean,
+    "train_rmse_std":train_rmse_std,
+
+    "train_mae_mean": train_mae_mean,
+    "train_mae_std": train_mae_std,
+
+    "test_rmse_mean": test_rmse_mean,
+    "test_rmse_std": test_rmse_std,
+
+    "test_mae_mean": test_mae_mean,
+    "test_mae_std": test_mae_std
+                    },index = [rule_name for rule_name in missing_rule])
+    
+    path = f"../results/{missingtype}/{dataname}/{model_name}"
+    if not os.path.exists(path):
+        # If the path does not exist, create it
+        os.makedirs(path)
+    
+    df.to_csv(f'{path}/{missingtype}_RMSE.csv')
+
+    return None
+                
+
+
+
 # need to change!
 #datalist = real_datalist
 datalist = syn_datalist
-model_name = "tabcsdi"
+model_name = ["mean","knn","hyper","gain","XGB","mice","mf","ot","miwae","notmiwae","tabcsdi","mcflow"]
+model_list = []
 plot = False
 
 missingtypelist = ["logistic"]
 
+for model_name in model_list:
+    for missingtype in missingtypelist:
+        if missingtype == "logistic":
+            missing_rule = load_json_file("missing_rate.json")
+        elif missingtype == "diffuse":
+            missing_rule = load_json_file("diffuse_ratio.json")
+        elif missingtype == "quantile":
+            missing_rule = load_json_file("quantile_full.json")
 
-for missingtype in missingtypelist:
-    if missingtype == "logistic":
-        missing_rule = load_json_file("missing_rate.json")
-    elif missingtype == "diffuse":
-        missing_rule = load_json_file("diffuse_ratio.json")
-    elif missingtype == "quantile":
-        missing_rule = load_json_file("quantile_full.json")
-
-    # load data and its mask
-    for dataname in tqdm(datalist):
-        directory_path = f"../datasets/{dataname}"    
-        norm_values = np.load(f'{directory_path}/{dataname}_norm.npy')
-        f = open(f'{directory_path}/split_index_cv_seed-{seed}_nfold-{nfold}.json')
-        index_file = json.load(f)
-        print(dataname)
-
-        train_rmse_mean = []
-        train_rmse_std = []
-        train_mae_mean = []
-        train_mae_std = []
-
-        
-        test_rmse_mean = []
-        test_rmse_std = []
-        test_mae_mean = []
-        test_mae_std = []
-
-
-        for rule_name in tqdm(missing_rule):
-            observed_masks = np.load(f'{directory_path}/{missingtype}/{rule_name}.npy')
-            train_rmse_list = []
-            train_mae_list = []
-            test_rmse_list = []
-            test_mae_list = []
-            for fold in index_file:
-                index = index_file[fold]
-                train_values,train_masks,test_values,test_masks = load_train_test(index,norm_values,observed_masks)
-                impute_train,impute_test  = load_impute_data(missingtype,model_name,rule_name,dataname,fold)
-
-                train_rmse = RMSE(train_masks,train_values,impute_train)
-                train_mae = MAE(train_masks,train_values,impute_train)
-
-                test_rmse = RMSE(test_masks,test_values,impute_test)
-                test_mae = MAE(test_masks,test_values,impute_test)
-
-                train_rmse_list.append(train_rmse)
-                train_mae_list.append(train_mae)
-                test_rmse_list.append(test_rmse)
-                test_mae_list.append(test_mae)
-            
-            if train_rmse > 0.5 and plot:
-                print(rule_name)
-                rmse = RMSE_columnwise(train_masks,train_values,impute_train)
-                print(rmse)
-                make_plot(train_values,impute_train,train_masks,title = f"{model_name} {dataname} {missingtype} {rule_name}",subtitle=rmse)
-            
-            
-                
-
-            train_rmse_mean.append(np.mean(train_rmse_list))
-            train_rmse_std.append(np.std(train_rmse_list))
-
-            train_mae_mean.append(np.mean(train_mae_list))
-            train_mae_std.append(np.std(train_mae_list))
-
-            test_rmse_mean.append(np.mean(test_rmse_list))
-            test_rmse_std.append(np.std(test_rmse_list))
-
-            test_mae_mean.append(np.mean(test_mae_list))
-            test_mae_std.append(np.std(test_mae_list))
-
-
-        df = pd.DataFrame({
-        "train_rmse_mean": train_rmse_mean,
-        "train_rmse_std":train_rmse_std,
-
-        "train_mae_mean": train_mae_mean,
-        "train_mae_std": train_mae_std,
-
-        "test_rmse_mean": test_rmse_mean,
-        "test_rmse_std": test_rmse_std,
-
-        "test_mae_mean": test_mae_mean,
-        "test_mae_std": test_mae_std
-    },index = [rule_name for rule_name in missing_rule])
-        
-        path = f"../results/{missingtype}/{dataname}/{model_name}"
-        if not os.path.exists(path):
-            # If the path does not exist, create it
-            os.makedirs(path)
-        
-        df.to_csv(f'{path}/{missingtype}_RMSE.csv')
-            
-        
+        # load data and its mask
+        for dataname in tqdm(datalist):
+            try:
+                calculate_rmse(missingtype,dataname,model_name,missing_rule)
+            except:
+                print(missingtype,dataname,model_name)

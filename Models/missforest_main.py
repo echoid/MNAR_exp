@@ -14,6 +14,7 @@ import missing_process.missing_method as missing_method
 from missing_process.block_rules import *
 from utils import load_train_test,make_plot,RMSE,mask_check
 import json
+from sklearn.ensemble import RandomForestRegressor
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -33,7 +34,7 @@ def imputer_model(args):
     nfold = 5
     dataname = args.data_name
     missingtype = args.miss_type
-    model_name = "mice"
+    model_name = "missforest"
 
     if missingtype == "logistic":
         missing_rule = load_json_file("missing_rate.json")

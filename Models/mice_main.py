@@ -33,7 +33,7 @@ def imputer_model(args):
     nfold = 5
     dataname = args.data_name
     missingtype = args.miss_type
-    model_name = "missforest"
+    model_name = "mice"
 
     if missingtype == "logistic":
         missing_rule = load_json_file("missing_rate.json")
