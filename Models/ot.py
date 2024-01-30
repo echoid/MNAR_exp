@@ -172,7 +172,10 @@ class OTimputer():
                     logging.info(f'Iteration {i}:\t Loss: {loss.item() / self.n_pairs:.4f}')
 
         X_filled = X.detach().clone()
-        X_filled[mask.bool()] = imps.double()
+        try:
+            X_filled[mask.bool()] = imps.double()
+        except:
+            X_filled[mask.bool()] = imps.float()
 
         if X_true is not None:
             return X_filled, maes, rmses
