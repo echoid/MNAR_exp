@@ -7,7 +7,6 @@ import argparse
 import os
 from mcflow_models import InterpRealNVP
 from mcflow_utils import MCFLOW_DataLoader,load_data
-import mcflow_utils
 from mcflow_models import LatentToLatentApprox
 import sys
 from tqdm import tqdm

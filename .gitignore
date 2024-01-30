@@ -134,6 +134,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+
 # history
 
 .history
@@ -141,9 +142,6 @@ dmypy.json
 
 /save/
 #results
-
-/datasets/
-/impute/
 
 
 TabCSDI/save
