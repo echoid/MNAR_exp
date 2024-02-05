@@ -5,7 +5,7 @@ import sys
 import argparse
 import torch
 import json
-import yaml
+#import yaml
 sys.path.append("..")
 sys.path.append(os.getcwd())
 os.environ["CUDA_VISIBLE_DEVICES"] = "3"
@@ -22,7 +22,8 @@ from tabcsdi_utils import train, evaluate
 
 
 parser = argparse.ArgumentParser(description="TabCSDI")
-parser.add_argument("--config", type=str, default="tabcsdi_config.yaml")
+#parser.add_argument("--config", type=str, default="tabcsdi_config.yaml")
+parser.add_argument("--config", type=str, default="tabcsdi_config.json")
 parser.add_argument("--device", default="cpu", help="Device")
 parser.add_argument("--seed", type=int, default=1)
 parser.add_argument("--testmissingratio", type=float, default=0.2)
@@ -63,7 +64,10 @@ os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 
 path =  args.config
 with open(path, "r") as f:
-    config = yaml.safe_load(f)
+    #config = yaml.safe_load(f)
+    config = json.load(f)
+
+print(config)
 
 config["model"]["is_unconditional"] = args.unconditional
 config["model"]["test_missing_ratio"] = args.testmissingratio
@@ -123,4 +127,4 @@ def main(args,config):
             np.save(f'{path}/{rule_name}_seed-{args.seed}_{fold}_test.npy', imputed_test_x.astype("float32"))
         
 
-main(args,config)
+#main(args,config)
