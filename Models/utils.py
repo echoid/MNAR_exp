@@ -9,7 +9,7 @@ import missing_process.missing_method as missing_method
 from missing_process.block_rules import *
 import json
 import matplotlib.pyplot as plt
-import seaborn as sns
+
 import torch
 
 def load_train_test(index_file,missingtype,rule_name,directory_path,dataname):  
@@ -59,6 +59,7 @@ def load_train_test_val(index_file,missingtype,rule_name,directory_path,dataname
 
 
 def make_plot(norm_value,mask, title = None):
+    import seaborn as sns
         # Create a 4x2 grid of subplots
     fig, axes = plt.subplots(4, 2, figsize=(12, 12))
     axes = axes.ravel()  # Flatten the 4x2 grid for easy iteration
@@ -143,8 +144,7 @@ def mask_check(array):
 import numpy as np
 #import tensorflow as tf
 ##IF USING TF 2 use following import to still use TF < 2.0 Functionalities
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+
 
 
 def normalization (data, parameters=None):
@@ -265,6 +265,8 @@ def rmse_loss (ori_data, imputed_data, data_m):
 
 
 def xavier_init(size):
+  import tensorflow.compat.v1 as tf
+  tf.disable_v2_behavior()
   '''Xavier initialization.
   
   Args:

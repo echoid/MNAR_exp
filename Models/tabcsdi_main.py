@@ -127,4 +127,4 @@ def main(args,config):
             np.save(f'{path}/{rule_name}_seed-{args.seed}_{fold}_test.npy', imputed_test_x.astype("float32"))
         
 
-#main(args,config)
+main(args,config)

@@ -2,8 +2,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 #from src.diff_models_table import diff_CSDI
-import yaml
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
