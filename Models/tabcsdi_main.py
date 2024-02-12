@@ -52,7 +52,11 @@ parser.add_argument(
       help='missing data type',
       choices=["quantile",
                    "diffuse",
-                   "logistic"
+                   "logistic",
+                   "quantile_1",
+                   "quantile_2",
+                   "quantile_3",
+                   "quantile_4"
                    ],
       default="logistic",
       type=str)
@@ -85,6 +89,9 @@ def main(args,config):
         missing_rule = load_json_file("diffuse_ratio.json")
     elif miss_type == "quantile":
         missing_rule = load_json_file("quantile_full.json")
+    else:
+        missing_rule = load_json_file(f"{miss_type}.json")
+        miss_type = "quantile"
 
     path = f"../impute/{miss_type}/{data_name}/tabcsdi"
     if not os.path.exists(path):
