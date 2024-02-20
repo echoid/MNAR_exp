@@ -83,11 +83,17 @@ def main (args):
   # Load data and introduce missingness
 
   if miss_type == "logistic":
-    missing_rule = load_json_file("missing_rate.json")
+      missing_rule = load_json_file("missing_rate.json")
   elif miss_type == "diffuse":
       missing_rule = load_json_file("diffuse_ratio.json")
   elif miss_type == "quantile":
       missing_rule = load_json_file("quantile_full.json")
+  elif miss_type == "test_MNAR_1":
+      missing_rule = load_json_file(f"{miss_type}.json")
+      miss_type = "logistic"
+  elif miss_type == "test_MNAR_2":
+      missing_rule = load_json_file(f"{miss_type}.json")
+      miss_type = "quantile"
 
   path = f"../impute/{miss_type}/{data_name}/GAIN"
   if not os.path.exists(path):
@@ -123,27 +129,27 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser()
   parser.add_argument(
       '--data_name',
-      choices=[
-            "banknote",
-             "concrete_compression",
-             "wine_quality_white",
-            "wine_quality_red",
-            "california",
-            "climate_model_crashes",
-            "connectionist_bench_sonar",
-            "qsar_biodegradation", 
-            "yeast", 
-            "yacht_hydrodynamics","syn1"
-            ],
+      # choices=[
+      #       "banknote",
+      #        "concrete_compression",
+      #        "wine_quality_white",
+      #       "wine_quality_red",
+      #       "california",
+      #       "climate_model_crashes",
+      #       "connectionist_bench_sonar",
+      #       "qsar_biodegradation", 
+      #       "yeast", 
+      #       "yacht_hydrodynamics","syn1"
+      #       ],
       default="syn1",
       type=str)
   parser.add_argument(
       '--miss_type',
       help='missing data type',
-      choices=["quantile",
-                   "diffuse",
-                   "logistic"
-                   ],
+      # choices=["quantile",
+      #              "diffuse",
+      #              "logistic"
+      #              ],
       default="logistic",
       type=str)
   parser.add_argument(

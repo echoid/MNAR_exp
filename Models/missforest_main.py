@@ -42,6 +42,12 @@ def imputer_model(args):
         missing_rule = load_json_file("diffuse_ratio.json")
     elif missingtype == "quantile":
         missing_rule = load_json_file("quantile_full.json")
+    elif missingtype == "test_MNAR_1":
+        missing_rule = load_json_file(f"{missingtype}.json")
+        missingtype = "logistic"
+    elif missingtype == "test_MNAR_2":
+        missing_rule = load_json_file(f"{missingtype}.json")
+        missingtype = "quantile"
 
     print(dataname)
     path = f"../impute/{missingtype}/{dataname}/{model_name}"
@@ -81,27 +87,28 @@ def imputer_model(args):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--seed', type=int, default=1, help='Reproducibility')
-parser.add_argument('--data_name',choices=[
-            "banknote",
-            "concrete_compression",
-            "wine_quality_white",
-            "wine_quality_red",
-            "california",
-            "climate_model_crashes",
-            "connectionist_bench_sonar",
-            "qsar_biodegradation", 
-            "yeast", 
-            "yacht_hydrodynamics","syn1"
-            ],
+parser.add_argument('--data_name',
+            #         choices=[
+            # "banknote",
+            # "concrete_compression",
+            # "wine_quality_white",
+            # "wine_quality_red",
+            # "california",
+            # "climate_model_crashes",
+            # "connectionist_bench_sonar",
+            # "qsar_biodegradation", 
+            # "yeast", 
+            # "yacht_hydrodynamics","syn1"
+            # ],
     default="syn1",
     type=str)
 parser.add_argument(
     '--miss_type',
     help='missing data type',
-    choices=["quantile",
-                "diffuse",
-                "logistic"
-                ],
+    # choices=["quantile",
+    #             "diffuse",
+    #             "logistic"
+    #             ],
     default="logistic",
     type=str)
 args = parser.parse_args()

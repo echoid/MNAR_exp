@@ -33,31 +33,31 @@ parser.add_argument("--modelfolder", type=str, default="")
 parser.add_argument("--nsample", type=int, default=3)
 parser.add_argument(
       '--data_name',
-      choices=[
-            "banknote",
-             "concrete_compression",
-             "wine_quality_white",
-            "wine_quality_red",
-            "california",
-            "climate_model_crashes",
-            "connectionist_bench_sonar",
-            "qsar_biodegradation", 
-            "yeast", 
-            "yacht_hydrodynamics","syn1"
-            ],
+    #   choices=[
+    #         "banknote",
+    #          "concrete_compression",
+    #          "wine_quality_white",
+    #         "wine_quality_red",
+    #         "california",
+    #         "climate_model_crashes",
+    #         "connectionist_bench_sonar",
+    #         "qsar_biodegradation", 
+    #         "yeast", 
+    #         "yacht_hydrodynamics","syn1"
+    #         ],
       default="syn1",
       type=str)
 parser.add_argument(
       '--miss_type',
       help='missing data type',
-      choices=["quantile",
-                   "diffuse",
-                   "logistic",
-                   "quantile_1",
-                   "quantile_2",
-                   "quantile_3",
-                   "quantile_4"
-                   ],
+    #   choices=["quantile",
+    #                "diffuse",
+    #                "logistic",
+    #                "quantile_1",
+    #                "quantile_2",
+    #                "quantile_3",
+    #                "quantile_4"
+    #                ],
       default="logistic",
       type=str)
 
@@ -89,6 +89,12 @@ def main(args,config):
         missing_rule = load_json_file("diffuse_ratio.json")
     elif miss_type == "quantile":
         missing_rule = load_json_file("quantile_full.json")
+    elif miss_type == "test_MNAR_1":
+        missing_rule = load_json_file(f"{miss_type}.json")
+        miss_type = "logistic"
+    elif miss_type == "test_MNAR_2":
+        missing_rule = load_json_file(f"{miss_type}.json")
+        miss_type = "quantile"
     else:
         missing_rule = load_json_file(f"{miss_type}.json")
         miss_type = "quantile"

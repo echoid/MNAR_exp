@@ -1,7 +1,7 @@
 rem Define choices for each argument
-set "data_names=yacht_hydrodynamics yeast qsar_biodegradation connectionist_bench_sonar climate_model_crashes california"
+set "data_names=wine_quality_white"
 set "miss_types=quantile"
-set "model_names=mean knn hyper gain XGB mice mf missforest notmiwae miwae tabcsdi ot"
+set "model_names=tabcsdi"
 
 rem Loop through each combination and run the script
 for %%a in (%data_names%) do (
