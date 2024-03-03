@@ -59,7 +59,7 @@ parser.add_argument(
 parser.add_argument(
       '--modelname',
       help='imputer',
-      choices=["mean","knn","hyper","gain","XGB","mice","mf","missforest","notmiwae","miwae","tabcsdi","ot"],
+      #choices=["mean","knn","hyper","gain","XGB","mice","mf","missforest","notmiwae","miwae","tabcsdi","ot"],
       default="mean",
       type=str)
 args = parser.parse_args()
@@ -209,25 +209,6 @@ def main(args):
             
         df.to_csv(f'{path}/{missingtype}_{task_type}_{ml_model_i}.csv')
 
-
-                    
-        # df = pd.DataFrame({
-        # f"train_{task_type}_mean": train_eval_mean_baseline,
-        # f"train_{task_type}_std":train_eval_std_baseline,
-
-
-        # f"test_{task_type}_mean": test_eval_mean_baseline,
-        # f"test_{task_type}_std": test_eval_std_baseline,
-
-
-        # },index = [rule_name for rule_name in missing_rule])
-            
-        # path = f"results/{missingtype}/{dataname}/"
-        # if not os.path.exists(path):
-        #         # If the path does not exist, create it
-        #     os.makedirs(path)
-            
-        # df.to_csv(f'{path}/{missingtype}_{task_type}_baseline_{ml_model_i}.csv')
 
 
 
