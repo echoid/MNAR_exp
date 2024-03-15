@@ -94,6 +94,8 @@ def main (args):
   elif miss_type == "test_MNAR_2":
       missing_rule = load_json_file(f"{miss_type}.json")
       miss_type = "quantile"
+  elif miss_type == "mcar" or miss_type == "mar":
+      missing_rule = load_json_file("mcar.json")
 
   path = f"../impute/{miss_type}/{data_name}/GAIN"
   if not os.path.exists(path):

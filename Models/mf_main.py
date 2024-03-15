@@ -45,6 +45,9 @@ def imputer_model(args):
     elif missingtype == "quantile":
         missing_rule = load_json_file("quantile_full.json")
 
+    elif missingtype == "mcar" or missingtype == "mar":
+        missing_rule = load_json_file("mcar.json")
+
     print(dataname)
     path = f"../impute/{missingtype}/{dataname}/{model_name}"
     if not os.path.exists(path):
@@ -101,10 +104,7 @@ parser.add_argument('--data_name',choices=[
 parser.add_argument(
     '--miss_type',
     help='missing data type',
-    choices=["quantile",
-                "diffuse",
-                "logistic"
-                ],
+
     default="logistic",
     type=str)
 args = parser.parse_args()

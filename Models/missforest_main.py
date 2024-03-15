@@ -49,6 +49,9 @@ def imputer_model(args):
         missing_rule = load_json_file(f"{missingtype}.json")
         missingtype = "quantile"
 
+    elif missingtype == "mcar" or missingtype == "mar":
+        missing_rule = load_json_file("mcar.json")
+
     print(dataname)
     path = f"../impute/{missingtype}/{dataname}/{model_name}"
     if not os.path.exists(path):

@@ -569,3 +569,36 @@ def diffuse_mnar_single(data, up_percentile = 0.5, obs_percentile = 0.5):
         mask[:, miss_col] = merged_temp
 
     return mask
+
+
+
+def MCAR(observed_values, p, seed=1):
+
+    np.random.seed(seed)
+    """
+    Generate MCAR mask based on the observed values and missing parameter p.
+
+    Parameters:
+    - observed_values: numpy array, observed values in the dataset
+    - p: float, percentage of data to be randomly removed (between 0 and 1)
+    - seed: int, random seed for reproducibility (default is 1)
+
+    Returns:
+    - masks: numpy array, masks indicating removed (0) and present (1) values
+    """
+      # Set random seed for reproducibility
+
+    num_rows, num_cols = observed_values.shape
+
+    # Number of elements to be removed per column
+    num_to_remove_per_column = int(num_rows * p)
+
+    # Initialize masks with all ones
+    masks = np.ones_like(observed_values)
+
+    # Randomly select indices to remove for each column
+    for col in range(num_cols):
+        indices_to_remove = np.random.choice(num_rows, num_to_remove_per_column, replace=False)
+        masks[indices_to_remove, col] = 0
+
+    return masks

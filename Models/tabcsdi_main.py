@@ -95,11 +95,13 @@ def main(args,config):
     elif miss_type == "test_MNAR_2":
         missing_rule = load_json_file(f"{miss_type}.json")
         miss_type = "quantile"
+    elif miss_type == "mcar" or miss_type == "mar":
+        missing_rule = load_json_file("mcar.json")
     else:
         missing_rule = load_json_file(f"{miss_type}.json")
         miss_type = "quantile"
 
-    path = f"../impute/{miss_type}/{data_name}/tabcsdi"
+    path = f"../impute_hpc/{miss_type}/{data_name}/tabcsdi"
     if not os.path.exists(path):
         # If the path does not exist, create it
         os.makedirs(path)
