@@ -13,7 +13,7 @@ from hyperimpute.plugins.imputers import Imputers
 from missing_process.block_rules import *
 from utils import load_train_test,na_data_loader
 import json
-
+from sklearn.impute import SimpleImputer
 parent_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(parent_directory)
 #from missing_process.block_rules import *
@@ -62,19 +62,56 @@ def main(args, seed = 1, nfold = 5):
         
             train_values,train_masks,test_values,test_masks = load_train_test(index_file[fold],miss_type,rule_name,directory_path,data_name)
 
+
+
             train_x, train_na, train_mask = na_data_loader(train_values,train_masks)
             test_x, test_na, test_mask = na_data_loader(test_values,test_masks)
 
             # ------------------- #
             # ---- Sinkhorn ---- #
-            # ------------------- #
-            imputer.fit(train_na)
-            imputed_train_x =  imputer.transform(train_na)
-            imputed_test_x = imputer.transform(test_na)
+            # ------------------- # 
+
+            try:
+                imputer.fit(train_na)
+                imputed_train_x =  imputer.transform(train_na)
+                imputed_test_x = imputer.transform(test_na)
+            except:
+                imp_mean = SimpleImputer(missing_values=np.nan, strategy='mean')
+                imp_mean.fit(train_na)
+                imputed_test_x = imp_mean.transform(test_na)
+                imputed_train_x = imp_mean.transform(train_na)
+
             np.save(f'{path}/{rule_name}_seed-{seed}_{fold}_train.npy', imputed_train_x.astype("float32"))
             np.save(f'{path}/{rule_name}_seed-{seed}_{fold}_test.npy', imputed_test_x.astype("float32"))
         
     
+
+
+import numpy as np
+
+def check_all_columns_missing(array):
+    """
+    Check if all columns in a NumPy array contain only missing values (NaNs).
+
+    Parameters:
+    - array: numpy array, the input array
+
+    Returns:
+    - boolean: True if all columns contain only missing values, False otherwise
+    """
+    return np.all(np.isnan(array), axis=0).all()
+
+def check_all_rows_missing(array):
+    """
+    Check if all rows in a NumPy array contain only missing values (NaNs).
+
+    Parameters:
+    - array: numpy array, the input array
+
+    Returns:
+    - boolean: True if all rows contain only missing values, False otherwise
+    """
+    return np.all(np.isnan(array), axis=1).all()
 
 
 

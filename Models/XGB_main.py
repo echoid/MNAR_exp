@@ -14,7 +14,7 @@ from utils import load_train_test,make_plot,RMSE,mask_check
 import json
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+from sklearn.impute import SimpleImputer
 
 real_datalist = ["banknote","concrete_compression",
             "wine_quality_white","wine_quality_red",
@@ -69,11 +69,19 @@ def imputer_model(args):
                 train_values_na = np.where(train_masks == 0, np.nan, train_values)
                 test_values_na = np.where(test_masks == 0, np.nan, test_values)
                 
-                imp = MissingImputer(ini_fill = True, model_reg = "xgboost", model_clf = "xgboost")
-                imp.fit(train_values_na,model_params = {'regressor':{'booster': 'gblinear'}, 'classifier':{'booster': 'gblinear'}})
+                try:
+                    imp = MissingImputer(ini_fill = True, model_reg = "xgboost", model_clf = "xgboost")
+                    imp.fit(train_values_na,model_params = {'regressor':{'booster': 'gblinear'}, 'classifier':{'booster': 'gblinear'}})
 
-                test_imp = imp.transform(test_values_na)
-                train_imp = imp.transform(train_values_na)
+                    test_imp = imp.transform(test_values_na)
+                    train_imp = imp.transform(train_values_na)
+
+                except:
+                    imp_mean = SimpleImputer(missing_values=np.nan, strategy='mean')
+                    imp_mean.fit(train_values_na)
+                    test_imp = imp_mean.transform(test_values_na)
+                    train_imp = imp_mean.transform(train_values_na)
+
 
 
                 np.save(f'{path}/{rule_name}_seed-{seed}_{fold}_train.npy', train_imp.astype("float32"))
